@@ -1,0 +1,103 @@
+managed implementation in class zbp_i_inwardgate_header unique;
+strict (2);
+
+define behavior for Z_I_INWARDGATE_HEADER alias InwardGateHeader
+
+late numbering
+persistent table zinward_gate_hdr
+lock master
+
+authorization master ( instance )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) GateEntryId,QRCode, Createdby, deleteduserid, deleteddate, deletedtime;
+  association _Item { create; }
+    field ( mandatory )InvoiceNo, Plant, InwardType, FiscalYear, SystemDate, Ponumber, Amount,vendor;
+
+// PW changes 151225
+   determination setCreatedInfo on modify { create; }
+   determination setDeletedInfo on modify
+{
+  field Cancelgateentry;
+}
+
+
+   determination CalculateNonKeyFields on modify { field GateEntryId; }
+   validation check_duplicate_invoice on save
+  {
+    field vendor, InvoiceNo, FiscalYear;
+  }
+// PW end
+  mapping for zinward_gate_hdr
+  {
+   GateEntryId = gate_entry_id;
+   InvoiceNo    = invoice_no  ;
+   Plant   = plant   ;
+   Inwardtype  = inwardtype  ;
+   Fiscalyear  = fiscalyear  ;
+   SystemDate  = system_date ;
+   SystemTime  = system_time ;
+   InvoiceDate = invoice_date    ;
+   Lrdate  = lrdate  ;
+   Lrnumber    = lrnumber    ;
+   Ponumber    = ponumber    ;
+   Ewayno  = ewayno  ;
+   Amount  = amount  ;
+   Vehicleno   = vehicleno   ;
+   Transporter = transporter ;
+   TransporterCode = transporter_code ;
+   QRCode = qrcode;
+   Zchalan = zchalan;
+   Vendor = vendor;
+   Status = status;
+   Remarks = remarks;
+   MaterialDoc = materialdocno;
+   MaterialYear = materialyear;
+   Supplierinv = supplierinvno;
+   Supplierinvyear = supplierinvyear;
+   Purchasegroup = purchasegroup;
+    PurchaseGrpdesc = purchase_grpdesc;
+    Ewaydate = ewaydate;
+    Vehicletype = vehicletype;
+    Cancelgateentry = cancelgateentry;
+
+    Deleteduserid = deleteduserid;
+    Deletedusername = deletedusername;
+    Deleteddate = deleteddate;
+    Deletedtime = deletedtime;
+    Createdby = createdby;
+    Creatusername = creatusername;
+  }
+
+}
+
+define behavior for Z_I_INWARDGATE_ITEM alias InwardGateItem
+late numbering
+persistent table zinward_gate_itm
+lock dependent by _Header
+authorization dependent by _Header
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) GateEntryId;
+  association _Header;
+
+  mapping for zinward_gate_itm
+  {
+   GateEntryId = gate_entry_id;
+   Ponumber    = ponumber    ;
+   LineItem    = itemno;
+   Material  = Material  ;
+   Materialdesc  = Materialdesc  ;
+   Quantity   = Quantity   ;
+   PostedQuantity = postedquantity;
+   Remainingqty = remainingqty;
+   Uom = uom;
+  }
+
+}

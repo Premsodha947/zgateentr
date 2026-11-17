@@ -1,0 +1,4 @@
+@EndUserText.label: 'SERVICE FOR VENDOR REPORT'
+define service ZVEN_PORT_SERVICE {
+  expose ZC_VENDOR_REPORT as Header;
+}

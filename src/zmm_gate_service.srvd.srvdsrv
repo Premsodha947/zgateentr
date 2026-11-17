@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service Definition'
+define service ZMM_GATE_SERVICE {
+  expose ZGATE_FINAL_REPORT as GateRep;
+}
